@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Spinner
+        android:id="@+id/teacher_filter"
+        style="@style/spinner_style"/>
+
+    <Spinner
+        android:id="@+id/weekly_group"
+        style="@style/spinner_style"/>
+
+    <View
+        android:id="@+id/span"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/span_height"
+        android:background="@color/span_bg" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/school_timetable_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

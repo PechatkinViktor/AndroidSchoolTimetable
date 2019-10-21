@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        tools:text="1" />
+
+
+    <TextView
+        android:id="@+id/theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lector"
+        android:textSize="@dimen/text_size_large"
+        android:layout_margin="@dimen/default_margin"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        tools:text="Lecture theme" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/theme"
+        android:textSize="@dimen/text_size_small"
+        android:layout_margin="@dimen/default_margin"
+        tools:text="Description theme" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/number"
+        android:layout_toEndOf="@+id/number"
+        tools:text="dd.mm.yyyy" />
+
+    <TextView
+        android:id="@+id/lector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/default_margin"
+        tools:text="Lecturer" />
+
+
+</RelativeLayout>
