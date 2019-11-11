@@ -1,10 +1,17 @@
 package com.pechatkin.sbt.androidschooltimetable.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 import java.util.Objects;
 
-public class Lecture {
+public class Lecture implements Parcelable {
 
     private static final int LECTURES_PER_WEEK = 3;
 
@@ -15,14 +22,41 @@ public class Lecture {
     private final String mDescription;
     private final int weekIndex;
 
-    public Lecture(int number, @NonNull String date, @NonNull String theme, @NonNull String lecturer, @NonNull String description) {
+    @JsonCreator
+    public Lecture(@JsonProperty("number") int number, @JsonProperty("date") @NonNull String date, @JsonProperty("theme") @NonNull String theme, @JsonProperty("lector") @NonNull String lecturer, @JsonProperty("subtopics") @NonNull List<String> description) {
         mNumber = number;
         mDate = date;
         mTheme = theme;
         mLecturer = lecturer;
-        mDescription = description;
+        StringBuilder buffer = new StringBuilder();
+        for (String s : description) {
+            buffer.append(s);
+            buffer.append(". ");
+        }
+        mDescription = buffer.toString();
         weekIndex = (mNumber - 1) / LECTURES_PER_WEEK;
     }
+
+    protected Lecture(Parcel in) {
+        mNumber = in.readInt();
+        mDate = in.readString();
+        mTheme = in.readString();
+        mLecturer = in.readString();
+        mDescription = in.readString();
+        weekIndex = in.readInt();
+    }
+
+    public static final Creator<Lecture> CREATOR = new Creator<Lecture>() {
+        @Override
+        public Lecture createFromParcel(Parcel in) {
+            return new Lecture(in);
+        }
+
+        @Override
+        public Lecture[] newArray(int size) {
+            return new Lecture[size];
+        }
+    };
 
     @Override
     public boolean equals(Object o) {
@@ -65,4 +99,18 @@ public class Lecture {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(mNumber);
+        parcel.writeString(mDate);
+        parcel.writeString(mTheme);
+        parcel.writeString(mLecturer);
+        parcel.writeString(mDescription);
+        parcel.writeInt(weekIndex);
+    }
 }

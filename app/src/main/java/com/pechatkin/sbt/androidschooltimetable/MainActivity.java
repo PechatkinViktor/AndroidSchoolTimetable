@@ -1,22 +1,24 @@
 package com.pechatkin.sbt.androidschooltimetable;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.pechatkin.sbt.androidschooltimetable.adapters.LectorerSpinnerAdapter;
 import com.pechatkin.sbt.androidschooltimetable.adapters.LecturesAdapter;
 import com.pechatkin.sbt.androidschooltimetable.adapters.SortLectureSpinnerAdapter;
 import com.pechatkin.sbt.androidschooltimetable.dataProvider.AndroidSchoolTimetableProvider;
-import com.pechatkin.sbt.androidschooltimetable.models.Lecture;
 import com.pechatkin.sbt.androidschooltimetable.models.GroupingLecture;
+import com.pechatkin.sbt.androidschooltimetable.models.Lecture;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -32,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initRecyclerView(savedInstanceState == null);
-        initLectorsSpinner();
-        initDisplayModeSpinner();
+        parseLectures(savedInstanceState == null);
     }
 
     private void initRecyclerView(boolean isFirstCreate) {
@@ -52,6 +52,36 @@ public class MainActivity extends AppCompatActivity {
             if (positionOfNextLecture != -1) {
                 recyclerView.scrollToPosition(positionOfNextLecture);
             }
+        }
+    }
+
+    private void parseLectures(boolean isFirstCreate) {
+        new ParserLectures(this, isFirstCreate).execute();
+    }
+
+    private static class ParserLectures extends AsyncTask<Void, Void, List<Lecture>> {
+
+        private final WeakReference<MainActivity> mMainActivityWeakReference ;
+        private final AndroidSchoolTimetableProvider mAndroidSchoolTimetableProvider;
+        private final boolean mIsFirstCreate;
+
+        private ParserLectures(MainActivity mainActivity, boolean isFirstCreate) {
+            mMainActivityWeakReference = new WeakReference<>(mainActivity);
+            mAndroidSchoolTimetableProvider = mainActivity.mAndroidSchoolTimetableProvider;
+            mIsFirstCreate = isFirstCreate;
+        }
+
+        @Override
+        protected List<Lecture> doInBackground(Void... voids) {
+            return mAndroidSchoolTimetableProvider.parseLectures();
+        }
+
+        @Override
+        protected void onPostExecute(List<Lecture> lectures) {
+            MainActivity activity = mMainActivityWeakReference.get();
+            activity.initRecyclerView(mIsFirstCreate);
+            activity.initLectorsSpinner();
+            activity.initDisplayModeSpinner();
         }
     }
 
