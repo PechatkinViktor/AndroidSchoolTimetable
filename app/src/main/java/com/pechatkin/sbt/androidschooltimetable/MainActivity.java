@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         private final AndroidSchoolTimetableProvider mAndroidSchoolTimetableProvider;
         private final boolean mIsFirstCreate;
 
-        private ParserLectures(MainActivity mainActivity, boolean isFirstCreate) {
+        private ParserLectures(@NonNull MainActivity mainActivity, boolean isFirstCreate) {
             mMainActivityWeakReference = new WeakReference<>(mainActivity);
             mAndroidSchoolTimetableProvider = mainActivity.mAndroidSchoolTimetableProvider;
             mIsFirstCreate = isFirstCreate;
@@ -79,9 +80,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Lecture> lectures) {
             MainActivity activity = mMainActivityWeakReference.get();
-            activity.initRecyclerView(mIsFirstCreate);
-            activity.initLectorsSpinner();
-            activity.initDisplayModeSpinner();
+            if(activity != null) {
+                activity.initRecyclerView(mIsFirstCreate);
+                activity.initLectorsSpinner();
+                activity.initDisplayModeSpinner();
+            }
         }
     }
 
